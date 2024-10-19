@@ -5,18 +5,11 @@ FROM node:16
 WORKDIR /app
 
 # Copy the package.json and install dependencies
-COPY package.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
 # Copy the rest of the application code
-COPY . ./
-
-# Pass build-time environment variables to React using ARG and ENV
-# The ARG is passed in at build-time, and ENV makes it available to npm scripts
-# ARG APP_API_TOKEN
-# ENV REACT_APP_API_TOKEN=${APP_API_TOKEN}
-# ARG APP_BASE_URL
-# ENV REACT_APP_BASE_URL=${APP_BASE_URL}
+COPY . .
 
 # Build the React app
 RUN npm run build
@@ -27,5 +20,9 @@ RUN npm install -g serve
 # Expose the port the app will run on
 EXPOSE 3000
 
-# Serve the app
-CMD ["serve", "-s", "build"]
+# Create a script to update the runtime-config.js file with environment variables
+COPY ./update-runtime-config.sh /app/update-runtime-config.sh
+RUN chmod +x /app/update-runtime-config.sh
+
+# Serve the app and update the runtime-config.js file at runtime
+CMD ["/bin/sh", "-c", "/app/update-runtime-config.sh && serve -s build"]
