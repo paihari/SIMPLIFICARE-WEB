@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-// Use environment variables for the token and URL
-//  const TOKEN = process.env.REACT_APP_API_TOKEN;
-  const TOKEN = window.env.REACT_APP_API_TOKEN || 'default-token';
 
-//  const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const BASE_URL = window.env.REACT_APP_BASE_URL || 'default-url';
+// First check process.env for environment variables, then fallback to window.env
+
+const BASE_URL = process.env.REACT_APP_BASE_URL || window.env.REACT_APP_BASE_URL || 'default-url';
+const TOKEN = process.env.REACT_APP_API_TOKEN || window.env.REACT_APP_API_TOKEN || 'default-token';
+  
 
   // POST: Trigger the job
 export const runJob = async () => {
 
-  console.log('API Token:', TOKEN);
-  console.log('Base URL:', BASE_URL);
+  // console.log('API Token:', TOKEN);
+  // console.log('Base URL:', BASE_URL);
 
   const url = `${BASE_URL}/jobs/run/p/f/simplificare/magical_script`;
 
